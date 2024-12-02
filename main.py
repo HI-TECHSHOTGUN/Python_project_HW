@@ -1,6 +1,6 @@
-from src.masks import get_mask_account, get_mask_card_number
+from src.widget import get_date, mask_account_card
 
-number_card = input()
-print(get_mask_card_number(number_card))
-number_account = input()
-print(get_mask_account(number_account))
+number_card_or_account = input("Сюда карту|счет: ")
+print(mask_account_card(number_card_or_account))
+random_date = input("Сюда дату: ")
+print(get_date(random_date))
