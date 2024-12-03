@@ -4,8 +4,10 @@ from src.masks import get_mask_account, get_mask_card_number
 
 
 def mask_account_card(number: Union[str]) -> str:
+    """маскировка номера карты с выводом названия карты или счета"""
     final_result = ""
-    if number[0:4].lower() == "счет":
+    if number.lower().startswith("счет"):
+        """маскировка счета"""
         name_account = ""
         count_number = 0
         for i in number:
@@ -15,6 +17,7 @@ def mask_account_card(number: Union[str]) -> str:
 
         final_result = name_account + get_mask_account(number[count_number:])
     elif number[0:4].lower() != "счет":
+        """маскировка карты"""
         number_card = ""
         count_word = 0
         for i in number:
@@ -27,6 +30,7 @@ def mask_account_card(number: Union[str]) -> str:
 
 
 def get_date(date: Union[str]) -> str:
+    """функция по выводы корректного значения даты"""
     date_list = date[1:11].split("-")
     date_list.reverse()
     date_str = ".".join(date_list)
