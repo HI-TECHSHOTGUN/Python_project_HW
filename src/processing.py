@@ -1,7 +1,7 @@
 from typing import Union
 
 
-def filter_by_state(x: Union[list], state: str = "EXECUTED") -> list:
+def filter_by_state(x: Union[list], state: str= "EXECUTED") -> list:
     """Функция для сортировки по состоянию операций"""
     filtered_1 = []
     for item in x:
