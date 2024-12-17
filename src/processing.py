@@ -1,17 +1,18 @@
-from typing import Union
 
 
-def filter_by_state(x: Union[list], state: str= "EXECUTED") -> list:
+def filter_by_state(not_filtered_list: list[dict], state: str) -> list:
     """Функция для сортировки по состоянию операций"""
-    filtered_1 = []
-    for item in x:
+    if state != "CANCELED":
+        state = "EXECUTED"
+    filtered_state_list = []
+    for item in not_filtered_list:
         if item.get("state") == state:
-            filtered_1.append(item)
+            filtered_state_list.append(item)
 
-    return filtered_1
+    return filtered_state_list
 
 
-def sort_by_date(data: Union[list], reverse: bool = True) -> list:
+def sort_by_date(data: list[dict], reverse: bool = True) -> list:
     """Функция для сортировки даты по убыванию"""
     sorted_data = sorted(data, key=lambda item: tuple(map(int, item["date"][:10].split("-"))), reverse=reverse)
 
