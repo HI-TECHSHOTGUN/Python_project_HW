@@ -18,4 +18,4 @@
 [Максимов Максим](https://github.com/HI-TECHSHOTGUN)
 ## Лицензия:
 
-Этот проект лицензирован по [лицензии MIT](LICENSE).
+Этот проект лицензирован по [лицензии MIT](https://create.mit-license.org).
