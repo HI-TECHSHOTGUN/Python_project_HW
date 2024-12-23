@@ -14,15 +14,20 @@ def test_get_mask_card_number_error(test_numbers_card_error):
 def test_get_mask_card_number(test_numbers_card):
     assert get_mask_card_number(test_numbers_card) == "4879 32** **** 0115"
 
+@pytest.mark.parametrize('value, expected', [
+    ('Visa Platinum 7000792289606361', 'Visa Platinum 7000 79** **** 6361'),
+    ('Счет 73654108430135874305', 'Счет **4305'),
+    ('Счет 7365410843013587', 'Счет не соответствует длине (20 цифр)'),
+    ('Visa Platinum 70007922896', 'Visa Platinum не соответствует длине (16 цифр)')
+])
+def test_mask_account_card(value, expected):
+    assert mask_account_card(value) == expected
 
-def test_mask_account_card():
-    assert mask_account_card("Visa Platinum 7000792289606361") == "Visa Platinum 7000 79** **** 6361"
+    assert mask_account_card(value) == expected
 
-    assert mask_account_card("Счет 73654108430135874305") == "Счет **4305"
+    assert mask_account_card(value) == expected
 
-    assert mask_account_card("Счет 7365410843013587") == "Счет не соответствует длине (20 цифр)"
-
-    assert mask_account_card("Visa Platinum 70007922896") == "Visa Platinum не соответствует длине (16 цифр)"
+    assert mask_account_card(value) == expected
 
 
 def test_get_date(test_get_data_fix, test_get_data_message):
