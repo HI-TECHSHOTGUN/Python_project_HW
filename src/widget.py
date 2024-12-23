@@ -1,5 +1,4 @@
 from typing import Union
-
 from src.masks import get_mask_account, get_mask_card_number
 
 
@@ -15,7 +14,7 @@ def mask_account_card(number: Union[str]) -> str:
                 name_account += i
                 count_number += 1
 
-        final_result = name_account + get_mask_account(number[count_number:])
+        final_result = name_account.title() + get_mask_account(number[count_number:])
     elif number[0:4].lower() != "счет":
         """маскировка карты"""
         number_card = ""
@@ -29,9 +28,14 @@ def mask_account_card(number: Union[str]) -> str:
     return final_result
 
 
-def get_date(date: Union[str]) -> str:
-    """функция по выводы корректного значения даты"""
-    date_list = date[1:11].split("-")
-    date_list.reverse()
-    date_str = ".".join(date_list)
-    return f'"{date_str}"'
+def get_date(date: str) -> str:
+    """Извлекает дату из строки в формате "YYYY-MM-DDTHH:MM:SS.ffffff" и форматирует её как "DD.MM.YYYY" """
+    if date == '':
+        return 'Неверный формат даты. (Пример: "YYYY-MM-DDTHH:MM:SS.ffffff")'
+    elif date[0] == '"' and date[5] == '-' and date[8] == '-' and date[14] == ':' and date[17] == ':' and date[20] == '.' and date[-1] == '"':
+        return f'"{date[9:11]}.{date[6:8]}.{date[1:5]}"'
+    else:
+        return 'Неверный формат даты. (Пример: "YYYY-MM-DDTHH:MM:SS.ffffff")'
+
+
+
