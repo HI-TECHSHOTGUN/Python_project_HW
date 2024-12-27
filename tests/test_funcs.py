@@ -1,6 +1,6 @@
 import pytest
 
-from src.generators import filter_by_currency, transact, transaction_descriptions, card_number_generator
+from src.generators import card_number_generator, filter_by_currency, transact, transaction_descriptions
 from src.masks import get_mask_card_number
 from src.processing import filter_by_state, sort_by_date
 from src.widget import get_date, mask_account_card
@@ -15,12 +15,16 @@ def test_get_mask_card_number_error(test_numbers_card_error):
 def test_get_mask_card_number(test_numbers_card):
     assert get_mask_card_number(test_numbers_card) == "4879 32** **** 0115"
 
-@pytest.mark.parametrize('value, expected', [
-    ('Visa Platinum 7000792289606361', 'Visa Platinum 7000 79** **** 6361'),
-    ('Счет 73654108430135874305', 'Счет **4305'),
-    ('Счет 7365410843013587', 'Счет не соответствует длине (20 цифр)'),
-    ('Visa Platinum 70007922896', 'Visa Platinum не соответствует длине (16 цифр)')
-])
+
+@pytest.mark.parametrize(
+    "value, expected",
+    [
+        ("Visa Platinum 7000792289606361", "Visa Platinum 7000 79** **** 6361"),
+        ("Счет 73654108430135874305", "Счет **4305"),
+        ("Счет 7365410843013587", "Счет не соответствует длине (20 цифр)"),
+        ("Visa Platinum 70007922896", "Visa Platinum не соответствует длине (16 цифр)"),
+    ],
+)
 def test_mask_account_card(value, expected):
     assert mask_account_card(value) == expected
 
@@ -81,6 +85,7 @@ def test_filter_by_currency():
     for transaction in usd_transactions:
         assert transaction["operationAmount"]["currency"]["code"] == "USD"
 
+
 def test_filter_by_currency_with_data():
     expected_usd_transactions = [
         transact[0],
@@ -99,31 +104,69 @@ def test_valid_descriptions(sample_transactions):
     descriptions = list(transaction_descriptions(sample_transactions))
     assert len(descriptions) == 4
 
+
 def test_transaction_descriptions_with_no_transactions():
     empty_transactions_iter = filter_by_currency([], "USD")
     descriptions = list(transaction_descriptions(empty_transactions_iter))
     assert descriptions == []
 
+
 def test_empty_transactions():
     descriptions = list(transaction_descriptions([]))
     assert len(descriptions) == 0
 
-def test_valid_range():
-    expected_cards = [
-        "0000 0000 0000 0010",
-        "0000 0000 0000 0011",
-        "0000 0000 0000 0012",
-        "0000 0000 0000 0013",
-        "0000 0000 0000 0014",
-        "0000 0000 0000 0015"
-    ]
-    generated_cards = list(card_number_generator(10, 15))
-    assert generated_cards == expected_cards
+
+@pytest.mark.parametrize(
+    "num_1, num_2, result",
+    [
+        (
+            10,
+            15,
+            [
+                "0000 0000 0000 0010",
+                "0000 0000 0000 0011",
+                "0000 0000 0000 0012",
+                "0000 0000 0000 0013",
+                "0000 0000 0000 0014",
+                "0000 0000 0000 0015",
+            ],
+        ),
+        (
+            23456789,
+            23456793,
+            [
+                "0000 0000 2345 6789",
+                "0000 0000 2345 6790",
+                "0000 0000 2345 6791",
+                "0000 0000 2345 6792",
+                "0000 0000 2345 6793",
+            ],
+        ),
+        (734865, 734865, ["0000 0000 0073 4865"]),
+        (
+            6457897645,
+            6457897650,
+            [
+                "0000 0064 5789 7645",
+                "0000 0064 5789 7646",
+                "0000 0064 5789 7647",
+                "0000 0064 5789 7648",
+                "0000 0064 5789 7649",
+                "0000 0064 5789 7650",
+            ],
+        ),
+    ],
+)
+def test_valid_range(num_1, num_2, result):
+    generated_cards = list(card_number_generator(num_1, num_2))
+    assert generated_cards == result
+
 
 def test_single_card():
     expected_card = ["1234 5678 9012 3456"]
     generated_cards = list(card_number_generator(1234567890123456, 1234567890123456))
     assert generated_cards == expected_card
+
 
 def test_large_range():
     cards = list(card_number_generator(9999999999999995, 9999999999999999))

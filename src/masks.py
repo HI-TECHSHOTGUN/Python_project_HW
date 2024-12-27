@@ -16,8 +16,7 @@ def get_mask_card_number(number_card_str: Union[str]) -> str:
         number_card_mask = number_card[:7] + "** ****" + number_card[-6:-1]
         return number_card_mask
     elif len(number_card_str) != 16:
-        return 'не соответствует длине (16 цифр)'
-
+        return "не соответствует длине (16 цифр)"
 
 
 def get_mask_account(b: Union[str]) -> str:
@@ -26,4 +25,4 @@ def get_mask_account(b: Union[str]) -> str:
         account_number_mask = "**" + b[-4:]
         return account_number_mask
     elif len(b) != 20:
-        return 'не соответствует длине (20 цифр)'
+        return "не соответствует длине (20 цифр)"

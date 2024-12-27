@@ -25,16 +25,16 @@ except SyntaxError:
 
 currency_code_input = input("Введите код валюты: ")
 filtered_transactions = filter_by_currency(transact, currency_code_input)
-while True:
-    try:
-        print(next(filtered_transactions))
-    except StopIteration:
-        print("Конец")
-        break
-start_input = int(input('Нижний регистр диапазона'))
-stop_input = int(input('Верхний регистр диапазона'))
+
 try:
-  for card_number in card_number_generator(start_input, stop_input):
-    print(card_number)
+    print(next(filtered_transactions))
+except StopIteration:
+    print("Конец")
+
+try:
+    start_input = int(input('Нижний регистр диапазона'))
+    stop_input = int(input('Верхний регистр диапазона'))
+    for card_number in card_number_generator(start_input, stop_input):
+        print(card_number)
 except ValueError:
-    print(f"Ошибка")
+    print("Ошибка")
