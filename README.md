@@ -24,6 +24,8 @@
     ```
     poetry run pytest --cov
     ```
+#### Нововведения:
+Добавлен модуль [generators.py](src/generators.py), в него добавлены новые функции в докстрингах прописан весь функционал
 ## Автор
 [Максимов Максим](https://github.com/HI-TECHSHOTGUN)
 ## Лицензия:

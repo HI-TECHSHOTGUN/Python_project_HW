@@ -1,5 +1,6 @@
 import pytest
 
+from src.generators import filter_by_currency, transact, transaction_descriptions, card_number_generator
 from src.masks import get_mask_card_number
 from src.processing import filter_by_state, sort_by_date
 from src.widget import get_date, mask_account_card
@@ -72,3 +73,60 @@ def test_sort_by_date(
 
     assert sort_by_date(test_sort_by_date_none_tipical, "True") == "Ошибка в вводе данных"
     assert sort_by_date(test_sort_by_date_none_tipical, "False") == "Ошибка в вводе данных"
+
+
+def test_filter_by_currency():
+    usd_transactions = list(filter_by_currency(transact, "USD"))
+    assert len(usd_transactions) == 3
+    for transaction in usd_transactions:
+        assert transaction["operationAmount"]["currency"]["code"] == "USD"
+
+def test_filter_by_currency_with_data():
+    expected_usd_transactions = [
+        transact[0],
+        transact[1],
+        transact[3],
+    ]
+    usd_transactions = list(filter_by_currency(transact, "USD"))
+    assert usd_transactions == expected_usd_transactions
+
+    expected_rub_transactions = [transact[2], transact[4]]
+    rub_transactions = list(filter_by_currency(transact, "RUB"))
+    assert rub_transactions == expected_rub_transactions
+
+
+def test_valid_descriptions(sample_transactions):
+    descriptions = list(transaction_descriptions(sample_transactions))
+    assert len(descriptions) == 4
+
+def test_transaction_descriptions_with_no_transactions():
+    empty_transactions_iter = filter_by_currency([], "USD")
+    descriptions = list(transaction_descriptions(empty_transactions_iter))
+    assert descriptions == []
+
+def test_empty_transactions():
+    descriptions = list(transaction_descriptions([]))
+    assert len(descriptions) == 0
+
+def test_valid_range():
+    expected_cards = [
+        "0000 0000 0000 0010",
+        "0000 0000 0000 0011",
+        "0000 0000 0000 0012",
+        "0000 0000 0000 0013",
+        "0000 0000 0000 0014",
+        "0000 0000 0000 0015"
+    ]
+    generated_cards = list(card_number_generator(10, 15))
+    assert generated_cards == expected_cards
+
+def test_single_card():
+    expected_card = ["1234 5678 9012 3456"]
+    generated_cards = list(card_number_generator(1234567890123456, 1234567890123456))
+    assert generated_cards == expected_card
+
+def test_large_range():
+    cards = list(card_number_generator(9999999999999995, 9999999999999999))
+    assert len(cards) == 5
+    assert cards[0] == "9999 9999 9999 9995"
+    assert cards[-1] == "9999 9999 9999 9999"
