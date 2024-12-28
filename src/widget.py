@@ -1,4 +1,5 @@
 from typing import Union
+
 from src.masks import get_mask_account, get_mask_card_number
 
 
@@ -30,12 +31,17 @@ def mask_account_card(number: Union[str]) -> str:
 
 def get_date(date: str) -> str:
     """Извлекает дату из строки в формате "YYYY-MM-DDTHH:MM:SS.ffffff" и форматирует её как "DD.MM.YYYY" """
-    if date == '':
+    if date == "":
         return 'Неверный формат даты. (Пример: "YYYY-MM-DDTHH:MM:SS.ffffff")'
-    elif date[0] == '"' and date[5] == '-' and date[8] == '-' and date[14] == ':' and date[17] == ':' and date[20] == '.' and date[-1] == '"':
+    elif (
+        date[0] == '"'
+        and date[5] == "-"
+        and date[8] == "-"
+        and date[14] == ":"
+        and date[17] == ":"
+        and date[20] == "."
+        and date[-1] == '"'
+    ):
         return f'"{date[9:11]}.{date[6:8]}.{date[1:5]}"'
     else:
         return 'Неверный формат даты. (Пример: "YYYY-MM-DDTHH:MM:SS.ffffff")'
-
-
-
