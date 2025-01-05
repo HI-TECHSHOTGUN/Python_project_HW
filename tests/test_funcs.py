@@ -1,5 +1,6 @@
 import pytest
 
+from src.decorators import log
 from src.generators import card_number_generator, filter_by_currency, transact, transaction_descriptions
 from src.masks import get_mask_card_number
 from src.processing import filter_by_state, sort_by_date
@@ -173,3 +174,44 @@ def test_large_range():
     assert len(cards) == 5
     assert cards[0] == "9999 9999 9999 9995"
     assert cards[-1] == "9999 9999 9999 9999"
+
+
+def test_log_with_file(tmp_path):
+    """Тест логирования в файл"""
+    log_file = tmp_path / "test_log.txt"
+
+    @log(filename=str(log_file))
+    def add(x, y):
+        return x + y
+
+    add(2, 3)
+    with open(log_file, "r") as file:
+        assert file.read().strip() == "add ok"
+
+
+def test_log_to_console(capsys):
+    """Тест логирования в консоль"""
+
+    @log(filename=None)
+    def subtract(x, y):
+        return x - y
+
+    subtract(5, 3)
+    captured = capsys.readouterr()
+    assert "subtract ok" in captured.out.strip()
+
+
+def test_log_error_to_console(capsys):
+    """Тест логирования ошибки в консоль"""
+
+    @log(filename=None)
+    def subtract_error(x, y):
+        return x - y + "s"
+
+    with pytest.raises(TypeError):
+        subtract_error(5, 3)
+    captured = capsys.readouterr()
+    assert (
+        "subtract_error error: unsupported operand type(s) for +: 'int' and 'str'. Inputs: (5, 3), {}"
+        in captured.out.strip()
+    )
