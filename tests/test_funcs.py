@@ -263,3 +263,13 @@ def test_loader_apilayer_valid_currency(mock_response):
     with patch("requests.request", return_value=mock_response(mock_json_data, 200)):
         result = loader_apilayer(amount, valet)
         assert result == expected_result
+
+def test_loader_apilayer_api_error(mock_response):
+    amount = 100.0
+    valet = "USD"
+    with patch(
+        "requests.request",
+        return_value=mock_response({"error": "some error"}, 400),
+    ):
+        with pytest.raises(KeyError):
+            loader_apilayer(amount, valet)
