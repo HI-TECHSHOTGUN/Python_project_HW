@@ -2,7 +2,7 @@ import json
 import os
 
 
-def transactions_from_json(file):
+def transactions_from_json(file)-> list:
     if not isinstance(file, str):
         print("Ошибка: Путь к файлу должен быть строкой")
         return []

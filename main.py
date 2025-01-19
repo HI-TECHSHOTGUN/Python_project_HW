@@ -44,12 +44,9 @@ except ValueError:
 
 print(transactions_from_json('E:/Desktop/Python_Prj/PythonProject1/data/operations.json'))
 
-try:
-    with open('E:/Desktop/Python_Prj/PythonProject1/data/operations.json', 'r', encoding='utf-8') as f:
-        data = json.load(f)
-        amount_input = (data[1]['operationAmount']['amount'])
-        valet_input = (data[1]['operationAmount']['currency']['code'])
+with open('E:/Desktop/Python_Prj/PythonProject1/data/operations.json', 'r', encoding='utf-8') as f:
+    data = json.load(f)
+    amount_input = (data[1]['operationAmount']['amount'])
+    valet_input = (data[1]['operationAmount']['currency']['code'])
 
-        print(loader_apilayer(amount_input, valet_input))
-except json.JSONDecodeError as e:
-    print(f'Ошибка ввода данных {e}')
+    print(loader_apilayer(amount_input, valet_input))

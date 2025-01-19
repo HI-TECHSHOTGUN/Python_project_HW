@@ -1,16 +1,19 @@
+import json
+from unittest.mock import patch
+
 import pytest
 
 from src.decorators import log
+from src.external_api import loader_apilayer
 from src.generators import card_number_generator, filter_by_currency, transact, transaction_descriptions
 from src.masks import get_mask_card_number
 from src.processing import filter_by_state, sort_by_date
+from src.utils import transactions_from_json
 from src.widget import get_date, mask_account_card
 
 
 def test_get_mask_card_number_error(test_numbers_card_error):
     assert get_mask_card_number(test_numbers_card_error) == "не соответствует длине (16 цифр)"
-
-    # 73654108430135874305
 
 
 def test_get_mask_card_number(test_numbers_card):
@@ -215,3 +218,48 @@ def test_log_error_to_console(capsys):
         "subtract_error error: unsupported operand type(s) for +: 'int' and 'str'. Inputs: (5, 3), {}"
         in captured.out.strip()
     )
+
+
+def test_invalid_file_type():
+    result = transactions_from_json(123)
+    assert result == []
+
+
+def test_file_not_found(tmp_path):
+    file_path = tmp_path / "non_existent.json"
+    result = transactions_from_json(str(file_path))
+    assert result == []
+
+
+def test_empty_file(tmp_path):
+    file_path = tmp_path / "empty.json"
+    file_path.touch()  # Создаем пустой файл
+    result = transactions_from_json(str(file_path))
+    assert result == []
+
+
+def test_invalid_json_file(tmp_path):
+    file_path = tmp_path / "invalid.json"
+    with open(file_path, "w") as f:
+        f.write("invalid json")
+    result = transactions_from_json(str(file_path))
+    assert result == []
+
+
+def test_valid_json_file(tmp_path):
+    file_path = tmp_path / "valid.json"
+    valid_data = [{"id": 1, "amount": 100}, {"id": 2, "amount": 200}]
+    with open(file_path, "w") as f:
+        json.dump(valid_data, f)
+    result = transactions_from_json(str(file_path))
+    assert result == valid_data
+
+
+def test_loader_apilayer_valid_currency(mock_response):
+    amount = 100.0
+    valet = "USD"
+    expected_result = "100.0 в USD равен 9100.0 в RUB"
+    mock_json_data = {"result": 9100.0}
+    with patch("requests.request", return_value=mock_response(mock_json_data, 200)):
+        result = loader_apilayer(amount, valet)
+        assert result == expected_result

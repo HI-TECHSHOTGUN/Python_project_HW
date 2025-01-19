@@ -1,5 +1,5 @@
 import pytest
-
+from unittest.mock import Mock
 
 @pytest.fixture
 def test_numbers_card_error():
@@ -124,3 +124,15 @@ def sample_transactions():
             "to": "Счет 101",
         },
     ]
+
+@pytest.fixture
+def mock_response():
+    """Фикстура для создания мокированного ответа requests"""
+
+    def _mock_response(json_data, status_code):
+        mock = Mock()
+        mock.json.return_value = json_data
+        mock.status_code = status_code
+        return mock
+
+    return _mock_response
