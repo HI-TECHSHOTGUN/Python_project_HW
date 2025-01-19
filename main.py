@@ -1,6 +1,9 @@
+from src.external_api import loader_apilayer
 from src.generators import filter_by_currency, transact, card_number_generator
+from src.utils import transactions_from_json
 from src.widget import get_date, mask_account_card
 from src.processing import filter_by_state, sort_by_date
+import json
 
 
 number_card_or_account = input("Сюда карту|счет: ")
@@ -38,3 +41,15 @@ try:
         print(card_number)
 except ValueError:
     print("Ошибка")
+
+print(transactions_from_json('E:/Desktop/Python_Prj/PythonProject1/data/operations.json'))
+
+try:
+    with open('E:/Desktop/Python_Prj/PythonProject1/data/operations.json', 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        amount_input = (data[1]['operationAmount']['amount'])
+        valet_input = (data[1]['operationAmount']['currency']['code'])
+
+        print(loader_apilayer(amount_input, valet_input))
+except json.JSONDecodeError as e:
+    print(f'Ошибка ввода данных {e}')
