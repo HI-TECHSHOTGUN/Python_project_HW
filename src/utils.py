@@ -1,5 +1,10 @@
 import json
 import os
+import logging
+
+
+logger = logging.getLogger('utils')
+file_handler = logging.FileHandler('')
 
 
 def transactions_from_json(file)-> list:
