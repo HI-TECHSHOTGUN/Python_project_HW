@@ -264,6 +264,7 @@ def test_loader_apilayer_valid_currency(mock_response):
         result = loader_apilayer(amount, valet)
         assert result == expected_result
 
+
 def test_loader_apilayer_api_error(mock_response):
     amount = 100.0
     valet = "USD"

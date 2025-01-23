@@ -1,6 +1,7 @@
 import pytest
 from unittest.mock import Mock
 
+
 @pytest.fixture
 def test_numbers_card_error():
     return "51726345"
@@ -124,6 +125,7 @@ def sample_transactions():
             "to": "Счет 101",
         },
     ]
+
 
 @pytest.fixture
 def mock_response():
