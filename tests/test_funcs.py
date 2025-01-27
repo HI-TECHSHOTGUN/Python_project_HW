@@ -284,9 +284,7 @@ def test_read_csv_file_not_found(mock_file_exists_csv):
 
 
 def test_read_csv_error(mock_file_exists_csv):
-    with patch(
-        "pandas.read_csv", side_effect=Exception("Test pandas error")
-    ):
+    with patch("pandas.read_csv", side_effect=Exception("Test pandas error")):
         result = read_csv("test.csv")
         assert result == []
 

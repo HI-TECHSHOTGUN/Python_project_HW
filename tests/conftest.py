@@ -145,6 +145,7 @@ def mock_response():
 @pytest.fixture
 def mock_file_exists_csv(monkeypatch):
     """Фикстура для подмены os.path.exists"""
+
     def mock_exists(path):
         return path == "transactions.csv"
 
