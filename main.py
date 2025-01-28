@@ -1,10 +1,16 @@
 import json
+import os
 
 from src.external_api import loader_apilayer
 from src.generators import card_number_generator, filter_by_currency, transact
+from src.module_pd import read_csv, read_xlsx
 from src.processing import filter_by_state, sort_by_date
 from src.utils import transactions_from_json
 from src.widget import get_date, mask_account_card
+
+MASTER_DIR = os.path.dirname(os.path.abspath(__file__))
+DIR_JSON = os.path.join(MASTER_DIR, "data", "operations.json")
+"""Нужно для построения пути до файла"""
 
 log_file_masks = "logs/masks.log"
 log_file_utils = "logs/utils.log"
@@ -50,11 +56,19 @@ try:
 except ValueError:
     print("Ошибка")
 
-print(transactions_from_json("E:/Desktop/Python_Prj/PythonProject1/data/operations.json"))
+print(transactions_from_json(os.path.join(MASTER_DIR, "data", "operations.json")))
 
-with open("E:/Desktop/Python_Prj/PythonProject1/data/operations.json", "r", encoding="utf-8") as f:
+with open(DIR_JSON, "r", encoding="utf-8") as f:
     data = json.load(f)
     amount_input = data[1]["operationAmount"]["amount"]
     valet_input = data[1]["operationAmount"]["currency"]["code"]
 
     print(loader_apilayer(amount_input, valet_input))
+
+path_excel = input("Введите имя считываемого файла excel: ")
+print(read_xlsx(os.path.join(MASTER_DIR, "data", path_excel)))
+# transactions_excel.xlsx
+
+path_csv = input("Введите имя считываемого файла cvs: ")
+print(read_csv(os.path.join(MASTER_DIR, "data", path_csv)))
+# transactions.csv

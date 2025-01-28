@@ -1,5 +1,7 @@
-import pytest
+import os
 from unittest.mock import Mock
+
+import pytest
 
 
 @pytest.fixture
@@ -138,3 +140,23 @@ def mock_response():
         return mock
 
     return _mock_response
+
+
+@pytest.fixture
+def mock_file_exists_csv(monkeypatch):
+    """Фикстура для подмены os.path.exists"""
+
+    def mock_exists(path):
+        return path == "transactions.csv"
+
+    monkeypatch.setattr(os.path, "exists", mock_exists)
+
+
+@pytest.fixture
+def mock_file_exists_excel(monkeypatch):
+    """Фикстура для подмены os.path.exists"""
+
+    def mock_exists(path):
+        return path == "test.xlsx"  # Возвращаем True только для "test.xlsx"
+
+    monkeypatch.setattr(os.path, "exists", mock_exists)

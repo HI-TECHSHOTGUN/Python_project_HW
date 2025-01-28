@@ -1,12 +1,14 @@
 import json
 from unittest.mock import patch
 
+import pandas as pd
 import pytest
 
 from src.decorators import log
 from src.external_api import loader_apilayer
 from src.generators import card_number_generator, filter_by_currency, transact, transaction_descriptions
 from src.masks import get_mask_card_number
+from src.module_pd import read_csv, read_xlsx
 from src.processing import filter_by_state, sort_by_date
 from src.utils import transactions_from_json
 from src.widget import get_date, mask_account_card
@@ -274,3 +276,43 @@ def test_loader_apilayer_api_error(mock_response):
     ):
         with pytest.raises(KeyError):
             loader_apilayer(amount, valet)
+
+
+def test_read_csv_file_not_found(mock_file_exists_csv):
+    result = read_csv("not_exists.csv")
+    assert result == []
+
+
+def test_read_csv_error(mock_file_exists_csv):
+    with patch("pandas.read_csv", side_effect=Exception("Test pandas error")):
+        result = read_csv("test.csv")
+        assert result == []
+
+
+def test_read_xlsx_file_not_found(mock_file_exists_excel):
+    result = read_xlsx("not_exists.xlsx")
+    assert result == []
+
+
+def test_read_xlsx_error(mock_file_exists_excel):
+    with patch("pandas.read_excel", side_effect=Exception("Test pandas error")):
+        result = read_xlsx("test.xlsx")
+        assert result == []
+
+
+def test_read_xlsx_valid_file(mock_file_exists_excel):
+    mock_data = {
+        "id": [1, 2],
+        "name": ["John", "Jane"],
+        "age": [30, 25],
+    }
+
+    mock_df = pd.DataFrame(mock_data)
+    expected_list = [
+        {"id": 1, "name": "John", "age": 30},
+        {"id": 2, "name": "Jane", "age": 25},
+    ]
+
+    with patch("pandas.read_excel", return_value=mock_df):
+        result = read_xlsx("test.xlsx")
+        assert result == expected_list
