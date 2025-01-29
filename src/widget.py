@@ -29,19 +29,11 @@ def mask_account_card(number: Union[str]) -> str:
     return final_result
 
 
-def get_date(date: str) -> str:
+def get_date(date) -> str:
     """Извлекает дату из строки в формате "YYYY-MM-DDTHH:MM:SS.ffffff" и форматирует её как "DD.MM.YYYY" """
     if date == "":
         return 'Неверный формат даты. (Пример: "YYYY-MM-DDTHH:MM:SS.ffffff")'
-    elif (
-        date[0] == '"'
-        and date[5] == "-"
-        and date[8] == "-"
-        and date[14] == ":"
-        and date[17] == ":"
-        and date[20] == "."
-        and date[-1] == '"'
-    ):
-        return f'"{date[9:11]}.{date[6:8]}.{date[1:5]}"'
+    elif date[4] == "-" and date[7] == "-" and date[13] == ":" and date[16] == ":":
+        return f"{date[8:10]}.{date[5:7]}.{date[0:4]}"
     else:
         return 'Неверный формат даты. (Пример: "YYYY-MM-DDTHH:MM:SS.ffffff")'

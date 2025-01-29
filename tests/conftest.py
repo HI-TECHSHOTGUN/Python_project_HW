@@ -16,7 +16,7 @@ def test_numbers_card():
 
 @pytest.fixture
 def test_get_data_fix():
-    return '"11.03.2024"'
+    return "11.03.2024"
 
 
 @pytest.fixture
@@ -31,6 +31,19 @@ def test_filter_by_state_list():
         {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
         {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
         {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+    ]
+
+
+@pytest.fixture
+def test_sample_data():
+    return [
+        {"id": 1, "state": "EXECUTED", "amount": 100},
+        {"id": 2, "state": "CANCELED", "amount": 50},
+        {"id": 3, "state": "PENDING", "amount": 200},
+        {"id": 4, "state": "EXECUTED", "amount": 150},
+        {"id": 5, "state": "CANCELED", "amount": 75},
+        {"id": 6, "state": "PENDING", "amount": 120},
+        {"id": 7, "state": "UNKNOWN", "amount": 300},
     ]
 
 
