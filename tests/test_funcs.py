@@ -42,9 +42,9 @@ def test_mask_account_card(value, expected):
 
 
 def test_get_date(test_get_data_fix, test_get_data_message):
-    assert get_date('"2024-03-11T02:26:18.671407"') == test_get_data_fix
+    assert get_date("2024-03-11T02:26:18.671407") == test_get_data_fix
 
-    assert get_date('2024-03-11T02:26:18.671407"') == test_get_data_message
+    assert get_date('"2024-03-11T02:26:18.671407') == test_get_data_message
 
     assert get_date("") == test_get_data_message
 
@@ -54,18 +54,37 @@ def test_filter_by_state(test_filter_by_state_list):
         {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
         {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
     ]
-    assert filter_by_state(test_filter_by_state_list, "NOT_List") == [
-        {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
-        {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
-    ]
 
 
 @pytest.mark.parametrize("test_state", ["LOL", "TESTS_STATE", "NONE_STATE"])
 def test_parametrize_filter_by_state(test_filter_by_state_list, test_state):
-    assert filter_by_state(test_filter_by_state_list, test_state) == [
-        {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
-        {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
+    assert filter_by_state(test_filter_by_state_list, test_state) == []
+
+
+def test_filter_by_executed(test_sample_data):
+    expected_result = [
+        {"id": 1, "state": "EXECUTED", "amount": 100},
+        {"id": 4, "state": "EXECUTED", "amount": 150},
     ]
+    assert filter_by_state(test_sample_data, "EXECUTED") == expected_result
+
+
+def test_filter_by_canceled(test_sample_data):
+    """Проверка фильтрации по состоянию 'CANCELED'."""
+    expected_result = [
+        {"id": 2, "state": "CANCELED", "amount": 50},
+        {"id": 5, "state": "CANCELED", "amount": 75},
+    ]
+    assert filter_by_state(test_sample_data, "CANCELED") == expected_result
+
+
+def test_filter_by_pending(test_sample_data):
+    """Проверка фильтрации по состоянию 'PENDING'."""
+    expected_result = [
+        {"id": 3, "state": "PENDING", "amount": 200},
+        {"id": 6, "state": "PENDING", "amount": 120},
+    ]
+    assert filter_by_state(test_sample_data, "PENDING") == expected_result
 
 
 def test_sort_by_date(
@@ -251,7 +270,7 @@ def test_invalid_json_file(tmp_path):
 def test_valid_json_file(tmp_path):
     file_path = tmp_path / "valid.json"
     valid_data = [{"id": 1, "amount": 100}, {"id": 2, "amount": 200}]
-    with open(file_path, "w") as f:
+    with open(file_path, "w", encoding="utf-8") as f:
         json.dump(valid_data, f)
     result = transactions_from_json(str(file_path))
     assert result == valid_data

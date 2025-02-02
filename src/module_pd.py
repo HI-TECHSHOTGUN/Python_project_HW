@@ -4,7 +4,7 @@ import pandas as pd
 def read_csv(file_name_csv):
     """Функция для чтения файлов с расширением .csv"""
     try:
-        csv_dict = pd.read_csv(file_name_csv)
+        csv_dict = pd.read_csv(file_name_csv, delimiter=";", encoding="utf-8")
         csv_list = csv_dict.to_dict(orient="records")
 
         return csv_list

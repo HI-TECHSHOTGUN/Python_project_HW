@@ -1,13 +1,32 @@
 def filter_by_state(not_filtered_list: list[dict], state: str) -> list:
     """Функция для сортировки по состоянию операций"""
-    if state != "CANCELED":
-        state = "EXECUTED"
-    filtered_state_list = []
-    for item in not_filtered_list:
-        if item.get("state") == state:
-            filtered_state_list.append(item)
+    if state == "CANCELED":
+        filtered_state_list = []
+        for item in not_filtered_list:
+            if item.get("state") == state:
+                filtered_state_list.append(item)
 
-    return filtered_state_list
+        return filtered_state_list
+
+    elif state == "EXECUTED":
+        filtered_state_list = []
+        for item in not_filtered_list:
+            if item.get("state") == state:
+                filtered_state_list.append(item)
+
+        return filtered_state_list
+
+    elif state == "PENDING":
+        filtered_state_list = []
+        for item in not_filtered_list:
+            if item.get("state") == state:
+                filtered_state_list.append(item)
+
+        return filtered_state_list
+
+    else:
+
+        return []
 
 
 def sort_by_date(data: list[dict], reverse: str) -> list[dict] or str:
@@ -16,13 +35,7 @@ def sort_by_date(data: list[dict], reverse: str) -> list[dict] or str:
     count_cikle = 0
     for k in data:
         date_true = k["date"]
-        if (
-            date_true[4] == "-"
-            and date_true[7] == "-"
-            and date_true[13] == ":"
-            and date_true[16] == ":"
-            and date_true[19] == "."
-        ):
+        if date_true[4] == "-" and date_true[7] == "-" and date_true[13] == ":" and date_true[16] == ":":
             count_error += 1
         count_cikle += 1
     if count_error == count_cikle:
